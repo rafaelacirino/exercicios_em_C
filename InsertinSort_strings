@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define tam 5
+#define max 10
+
+void insertionSort_string(char *lista[], int tamanho);
+
+void insertionSort_string(char *lista[], int tamanho){
+  for (int i = 1; i < tamanho; i++){
+    char* eleito = lista[i];
+    int j = i - 1;
+
+    while(j >= 0 && strcmp(lista[j], eleito) > 0){
+      lista[j + 1] = lista[j];
+      j -= 1;
+    }
+    lista[j + 1] = eleito;
+  }
+}
+
+int main(){
+  int indice;
+  char **strings;
+
+  for(int i = 0; i < tam; i++){
+    strings[i] = (char*) malloc(max * sizeof(char*));
+  }
+  
+  printf("Digite as %d strings: ", tam);
+
+  for(indice = 0; indice < tam; indice++){
+    printf("Digite a string %d: ", indice);
+    scanf("%s", strings[indice]);
+  }
+
+  insertionSort_string(strings, tam);
+
+  for(int aux2 = 0; aux2 < tam; aux2++){
+    printf("%s ", strings[aux2]);
+  }
+  printf("\n");
+
+  return 0;
+}
