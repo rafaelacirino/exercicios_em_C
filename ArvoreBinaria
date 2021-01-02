@@ -1,0 +1,239 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//armazena informações de um nó
+struct sNODE{
+  //armazena o elemento do nó
+  int dado;
+  //esq armazena o endereço do nó filho esquerdo
+  //dir armazena o endereço do nó filho direito
+  struct sNODE *esq, *dir;
+};
+
+//ponteiro para o nó raiz. pode estar no main, mas aqui está como variável global
+struct sNODE *raiz = NULL;
+//insere elemento na árvore
+struct sNODE *inserir (struct sNODE *no, int dado);
+//remove algum elemento da árvore
+struct sNODE *remover (struct sNODE *no, int dado);
+
+
+//consulta primeiro os nós da subárvore esquerda são visitados, em seguida é visitado o nó e depois os nós da subárvore da direita
+void emOrdem(struct sNODE *no);
+//primeiro é visitado o nó, depois os nós da subárvore da esquerda, seguido dos nós da subárvore da direita
+void preOrdem(struct sNODE *no);
+//consulta primeiro os nós da subárvore esquerda e depois os nós das ubárvore direita e por fim o nó é visitado
+void posOrdem(struct sNODE *no);
+
+//procura por um elemento
+struct sNODE *buscar(struct sNODE *no, int dado);
+//retorna o dado presente no nó
+int obter(struct sNODE *no);
+//apaga todos os nós da árvore
+struct sNODE *apagar(struct sNODE *no);
+
+//LETRA A (retornar o maior valor)
+struct sNODE *getMax(struct sNODE *no, int dado);
+//LETRA B (retornar o menor valor)
+struct sNODE *getMin(struct sNODE *no, int dado);
+//LETRA C 
+int mostrarFolhas(struct sNODE *no, int dado);
+//LETRA D 
+int distanciaDaRaiz(struct sNODE *no, int dado);
+//LETRA E (altura da árvore)
+int alturaArvore(struct sNODE *raiz);
+//LETRA F (distância em saltos entre elementos)
+int distanciaEntre(struct sNODE *no, int dado1, int dado2);
+
+int main(){
+  return 0;
+}
+
+struct sNODE *inserir(struct sNODE *no, int dado){
+  if(!no){
+    no = (struct sNODE*)malloc(sizeof(struct sNODE));
+    no -> dado = dado;
+    no -> esq = no -> dir = NULL;
+  }
+  else if(dado < no -> dado){
+    no -> esq = inserir(no -> esq, dado);
+  }
+  else{
+    no -> dir = inserir(no -> dir, dado);
+  }
+  return no;
+}
+
+struct sNODE *remover(struct sNODE *no, int dado){
+  struct sNODE *aux = NULL, *aux2 = NULL;
+  if(no){
+    if(no-> dado == dado){
+      if(no -> esq == no -> dir){
+        free(no);
+        return NULL;
+      }
+      else if(!no -> esq){
+        aux = no -> dir;
+        free(no);
+        return aux;
+      }
+      else if(!no -> dir){
+        aux = no -> esq;
+        free(no);
+        return aux;
+      }      
+      else{
+        aux = aux2 = no -> dir;
+        while(aux -> esq){
+          aux = aux -> esq;
+        aux -> esq = no -> esq;
+        free(no);
+        return aux2;
+        }
+      }
+    }
+    else{
+      if(dado < no -> dado){
+        no -> esq = remover(no -> esq, dado);
+      }
+      else{
+        no -> dir = remover(no -> dir, dado);
+      }
+    }
+  }  
+  return no;
+}
+
+void emOrdem(struct sNODE *no){
+  if(no){
+    emOrdem(no -> esq);
+    printf("%d", no -> dado);
+    emOrdem(no -> dir);
+  }
+}
+
+void preOrdem(struct sNODE *no){
+  if(no){
+    printf("%d", no -> dado);
+    preOrdem(no -> esq);
+    preOrdem(no -> dir);
+  }
+}
+
+void posOrdem(struct sNODE *no){
+  if(no){
+    posOrdem(no -> esq);
+    posOrdem(no -> dir);
+    printf("%d", no -> dado);
+  }
+}
+
+struct sNODE *buscar(struct sNODE *no, int dado){
+  if(no){
+    if(no -> dado == dado){
+      return no;
+    }
+    else if(dado < no -> dado){
+      return buscar(no -> esq, dado);
+    }
+    else{
+      return buscar(no-> dir, dado);
+    }
+  }
+  return NULL;
+}
+
+int obter(struct sNODE *no){
+    if(no){
+      return no -> dado;
+    }
+    else{
+      printf("Nenhum dado para retornar.");
+      return 0;
+    }
+}
+
+struct sNODE *apagar(struct sNODE *no){
+  if(no){
+    no -> esq = apagar(no -> esq);
+    no -> dir = apagar(no -> dir);
+    free(no);
+  }
+  return NULL;
+}
+
+//LETRA A
+struct sNODE *getMax(struct sNODE *no, int dado){
+  while(no -> dir != NULL){
+    no = no -> dir;
+  }
+  return no -> dir;
+}
+
+//LETRA B
+struct sNODE *getMin(struct sNODE *no, int dado){
+  while(no -> esq != NULL){
+    no = no -> esq;
+  }
+  return no -> esq;
+}
+
+//LETRA C 
+int mostrarFolhas(struct sNODE *no, int dado){
+  if(raiz == NULL){
+    return 0;
+  }
+  else if(no -> esq == NULL && no -> dir == NULL){
+    return dado;
+    printf("%d", dado);
+  }
+}
+
+//LETRA D 
+int distanciaDaRaiz(struct sNODE *no, int dado){
+  if(raiz == NULL){
+    return 0;
+  }
+  else{
+    return (no -> esq == NULL) + 1 + (no -> dir == NULL);
+  }
+}
+
+//LETRA E 
+int alturaArvore(struct sNODE *raiz){
+  if(raiz == NULL){
+    return -1;
+  }
+  else{
+    int altesq = alturaArvore(raiz -> esq);
+    int altdir = alturaArvore(raiz -> dir);
+    if(altesq < altdir){
+      return altdir + 1;
+    }
+    else{
+      return altesq + 1;
+    }
+  }
+}
+
+//letra F 
+int distanciaEntre(struct sNODE *no, int dado1, int dado2){
+  if(!no){
+    return -1;
+  }
+  int dist = -1;
+
+  if(no -> dado == dado1){
+    if((no -> dado == dado2) || (dist = distanciaDaRaiz(no -> esq, dado2)) >= 0 || (dist = distanciaDaRaiz(no -> dir, dado2 >= 0))){
+      return dist + 1;
+    }
+    return dist;
+  }
+  else if(dado1 < no -> dado){
+    dist = distanciaDaRaiz(no -> esq, dado1);
+  }
+  else{
+    dist = distanciaDaRaiz(no -> dir, dado1);
+  }
+  return dist;
+}
