@@ -1,0 +1,208 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct sNODE{
+  unsigned col;
+  unsigned dado;
+  struct sNODE *prox;
+};
+
+struct sMATRIZ{
+  int lin, col;
+  struct sNODE **m;
+};
+
+struct sMATRIZ m;
+
+void inicializar(unsigned t_lin, unsigned t_col);
+//Letra a
+int getMax();
+//Letra b
+int getMin();
+//Letra c
+void diagonaIP();
+//Letra d
+int count(int dado);
+
+void atribuir(unsigned lin, unsigned col, int dado);
+int acessar(unsigned lin, unsigned col);
+
+int tamanho();
+void imprimir();
+void apagar();
+
+int main(void) {
+    return 0;
+}
+
+void inicializar(unsigned t_lin, unsigned t_col){
+  m.lin = t_lin;
+  m.col = t_col;
+  m.m = (struct sNODE **) malloc(sizeof(struct sNODE *) * m.lin);
+
+  for (int i = 0 ; i < m.lin ; i++)
+m.m[i] = NULL;
+}
+
+void atribuir(unsigned lin, unsigned col, int dado) {
+  if (lin < m.lin && col < m.col) {
+	struct sNODE *aux = m.m[lin], *ant = NULL;
+
+	while (aux && col > aux->col) {
+  	ant = aux;
+  	aux = aux->prox;
+	}
+
+	if (aux && aux->col == col){
+  	   if (dado == 0) {
+    	      if (ant == NULL) m.m[lin] = aux->prox;
+    	      else ant->prox = aux->prox;
+
+    	   free(aux);
+
+  	} else aux->dado = dado;
+
+	} else if (dado != 0) {
+  	   struct sNODE *novo = (struct sNODE *) malloc(sizeof(struct sNODE));
+  	   novo->col = col;
+  	   novo->dado = dado;
+  	   novo->prox = aux;
+  	   if (ant == NULL) m.m[lin] = novo;
+  	   else ant->prox = novo;
+	}
+
+  } else {
+	printf("Não é possível inserir elementos fora da Matriz.\n");
+	exit(0);
+  }
+}
+
+//Letra a
+int getMax(){
+  int max = 0;
+  for (int i = 0 ; i < m.lin ; i++) {
+    struct sNODE *x = m.m[i];
+
+    for (int j = 0 ; j < m.col ; j++) {
+      if (x && j == x -> col){
+        if(x -> dado > max){
+          max = x -> dado;
+        }
+        x = x -> prox;
+      } 
+	  }
+  }
+  return max;
+}
+
+//Letra b
+int getMin(){
+  int min = 100000;
+  for (int o = 0 ; o < m.lin ; o++) {
+    struct sNODE *x = m.m[o];
+
+    for (int p = 0 ; p < m.col ; p++) {
+      if (x && p == x -> col){
+        if(x -> dado < min){
+          min = x -> dado;
+        }
+        x = x -> prox;
+      } 
+      else min = 0;
+	  }
+  }
+  return min;
+}
+
+//Letra c
+void diagonaIP(){
+  if (m.lin == m.col){
+    printf("DP[ ");
+    for (int i = 0 ; i < m.lin ; i++) {
+      struct sNODE *x = m.m[i];
+
+      for (int j = 0 ; j < m.col ; j++){
+        if ((x) && (j == x -> col)){
+          if(i == j)
+            printf("%d ",x -> dado);  
+          
+
+          x = x->prox;
+        
+        } else{
+          if(i == j)printf("%d ",0);
+          
+        }
+      }
+    }
+    printf("]\n");
+  }
+}
+
+//Letra d
+int count(int dado){
+  int vezes = 0;
+
+  for (int i = 0 ; i < m.lin ; i++) {
+    struct sNODE *x = m.m[i];
+
+    for (int j = 0 ; j < m.col ; j++) {
+      if (x && j == x -> col){
+        if(x -> dado == dado)
+          vezes++;
+        x = x -> prox;
+      } 
+	  }
+  }
+  return vezes;
+}
+
+
+int acessar(unsigned lin, unsigned col) {
+  if (lin < m.lin && col < m.col) {
+	struct sNODE *aux = m.m[lin];
+while (aux && col > aux->col)
+  	   aux = aux->prox;
+    
+	if (aux && col == aux->col)
+  	return aux->dado;
+    
+	return 0;
+  } else {
+	printf("Não é possível acessar elementos fora da Matriz.\n");
+	exit(0);
+  }
+}
+
+int tamanho() {
+  return m.lin * m.col;
+}
+
+void imprimir(){
+  printf("M[\n");
+  for (int i = 0 ; i < m.lin ; i++) {
+	struct sNODE *aux = m.m[i];
+
+	for (int j = 0 ; j < m.col ; j++) {
+  	   if (aux && j == aux->col) {
+    	      printf("%4d ",aux->dado);
+    	      aux = aux->prox;
+  	   } else printf("%4d ",0);
+	}
+	printf("\n");
+  }
+  printf("]\n");
+}
+
+void apagar(){
+  for (int i = 0 ; i < m.lin ; i++) {
+	struct sNODE *aux = m.m[i], *ant = NULL;
+
+	while (aux) {
+  	   ant = aux;
+  	   aux = aux->prox;
+  	   free(ant);
+	}
+  }
+  free(m.m);
+}
