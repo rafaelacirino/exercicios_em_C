@@ -1,0 +1,92 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+
+//MAX define o tamanho máximo da pilha
+const unsigned MAX = 10;
+//array l armazena os elementos da pilha
+//pos controla o acesso push e pop aos elementos da pilha
+//ao atribuir pos = 0 indicamos que a pilha está vazia
+int l[MAX], pos = 0;
+
+//push empilha um novo elemnto na pilha
+void push(int elemento);
+//pop desempilha o último elemento da pilha
+int pop();
+//obtem o tamanho da pilha
+int tamanho();
+//imprime a pilha
+void imprimir();
+//sera a pilha
+void apagar();
+bool pilha_vazia();
+bool pilha_cheia();
+int getTopo(int elemento);
+
+
+int main(void){
+  return 0;
+}
+
+void push(int elemento){
+  if(pos < MAX){
+    l[pos++] = elemento;
+  }
+  else{ 
+    printf("Não foi possível inserir %d. Pilha cheia.\n", elemento);
+  }
+}
+
+int pop(){
+  if(pos){
+    return l[--pos];
+  }
+  else{
+    printf("Não há elementos. Pilhavazia.\n");
+    exit(1);
+  }
+}
+
+bool pilha_cheia(){
+  if(pos == MAX - 1){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+bool pilha_vazia(){
+  if(pos == -1){
+    return true;
+  }
+  else{
+    return false;
+  }
+} 
+
+int getTopo(int elemento){
+  if(pilha_vazia()){
+    return 0;
+  }
+  else{
+    elemento = l[pos];
+    return elemento;
+  }
+}
+
+int tamanho(){
+  return pos;
+}
+
+void imprimir(){  
+  printf("P[ ");
+  for(int i = pos -1; i >= 0; i--){
+    printf("%d", l[i]);
+  }
+  printf(" ]\n");
+}
+
+void apagar(){
+  pos = 0;
+}
