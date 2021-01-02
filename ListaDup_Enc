@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct sNODE{
+  int dado;
+  struct sNODE *ant;
+  struct sNODE *prox;
+};
+
+struct TLista{
+  struct sNODE *inicio;
+  struct sNODE *fim;
+};
+
+struct sNODE *ini = NULL, *fim = NULL;
+
+//define a lista como vazia
+void inicializaLista(struct TLista *pLista){
+  pLista->inicio = NULL;
+  pLista->fim = NULL;
+}
+
+
+void inserir_ini(int dado);
+void imprimir_reverso();
+
+int main(){
+  inserir_ini(50);
+  imprimir_reverso();
+  return 0;
+}
+
+void inserir_ini(int dado){
+  struct sNODE *novo = (struct sNODE*) malloc(sizeof(struct sNODE));
+  novo->dado = dado;
+  novo->ant = NULL;
+  novo->prox = NULL;
+
+  if (!ini)
+	ini = fim = novo;
+  else{
+	fim->prox = novo;
+	novo->ant = fim;
+	fim = novo;
+  }
+}
+
+//Letra A
+void inseri_ini(struct TLista* pLista){
+  struct sNODE* elemento;
+
+  elemento->prox = NULL;
+  elemento->ant = NULL;
+
+  if(pLista->inicio == NULL){
+    pLista->inicio = elemento;
+    pLista->fim = elemento;
+  }
+  else{
+    pLista->inicio->ant = elemento;
+    elemento->prox = pLista->inicio;
+    pLista->inicio = elemento;
+  }
+}
+
+//Letra B
+void imprimir_reverso(struct TLista* pLista){
+  struct sNODE* aux = fim;
+
+    while(aux != NULL){
+      printf("%d\n", aux->dado);
+      aux = aux->ant;
+    }
+    printf("Fim da lista");
+}
