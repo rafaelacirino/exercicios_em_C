@@ -1,0 +1,91 @@
+#include<stdio.h> 
+#include<stdlib.h> 
+  
+struct sNODE 
+{ 
+    int dado; 
+    struct sNODE *prox; 
+}; 
+  
+void inserirNoInicio(struct sNODE **start_ref, int dado); 
+  
+void bubbleSort(struct sNODE *start); 
+  
+void troca(struct sNODE *a, struct sNODE *b); 
+  
+void imprimir(struct sNODE *start); 
+
+void inserirNoInicio(struct sNODE **start_ref, int dado){ 
+  
+  struct sNODE *ptr1 = (struct sNODE*)malloc(sizeof(struct sNODE)); 
+  ptr1->dado = dado; 
+  ptr1->prox = *start_ref; 
+  *start_ref = ptr1; 
+} 
+  
+void imprimir(struct sNODE *start){ 
+  
+  struct sNODE *temp = start; 
+  printf("\n"); 
+    
+  while (temp!=NULL){ 
+    printf("%d ", temp->dado); 
+    temp = temp->prox; 
+  } 
+} 
+  
+
+void bubbleSort(struct sNODE *start){ 
+    
+  int trocaped, i; 
+  struct sNODE *ptr1; 
+  struct sNODE *lptr = NULL; 
+  
+  if (start == NULL) 
+    return; 
+  
+  do{ 
+    trocaped = 0; 
+    ptr1 = start; 
+  
+    while (ptr1->prox != lptr){ 
+      if (ptr1->dado > ptr1->prox->dado){  
+        troca(ptr1, ptr1->prox); 
+        trocaped = 1; 
+      } 
+      ptr1 = ptr1->prox; 
+    } 
+    lptr = ptr1; 
+  } 
+  while (trocaped); 
+} 
+  
+void troca(struct sNODE *a, struct sNODE *b){ 
+  int temp = a->dado; 
+  a->dado = b->dado; 
+  b->dado = temp; 
+}
+
+int main(){ 
+
+  int arr[] = {23, 58, 12, 97, 45, 2}; 
+  int list_size, i; 
+    
+  struct sNODE *start = NULL; 
+  
+  for (i = 0; i< 6; i++){ 
+    inserirNoInicio(&start, arr[i]); 
+  }
+  
+  printf("\nLista desordenada: "); 
+  imprimir(start); 
+  
+  for (int j = 0; j< 6; j++){ 
+    bubbleSort(start); 
+  }
+  
+  printf("\nLista em ordem: "); 
+  imprimir(start);
+  
+  return 0; 
+} 
