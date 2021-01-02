@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef int tipo_dado;
+
+typedef struct elemento {
+    tipo_dado dado;
+    struct elemento *prox;
+} no;
+
+typedef no* TPilhaEnc;
+
+//cria a Pilha;
+void criarPilha(TPilhaEnc *pilha);
+//Tamanho da pilha
+int tamanhoPilha(TPilhaEnc pilha);
+//verifica se a pilha está vazia
+int pilhaVazia(TPilhaEnc pilha);
+//Empilha um elemento
+int empilha(TPilhaEnc *pilha, tipo_dado dado);
+//Desempilha um elemento
+int desempilha(TPilhaEnc *pilha, tipo_dado *dado);
+//Exibir todos os elementos da pilha
+int imprimir (TPilhaEnc pilha);
+//elemento do topo
+int elementoTopo( TPilhaEnc pilha, int *dado );
+//desempilha n elementos
+int desempilhaN(TPilhaEnc *pilha, int n);
+
+
+
+TPilhaEnc* criaPilha(){
+    TPilhaEnc* pi = (TPilhaEnc*) malloc(sizeof(TPilhaEnc));
+    if( pi != NULL ) {
+        *pi = NULL;
+        return pi;
+    }
+}
+
+
+void criarPilha(TPilhaEnc *pilha){
+	*pilha = NULL;
+}
+
+int pilhaVazia(TPilhaEnc pilha){
+	return pilha == NULL;
+}
+
+int tamanhoPilha( TPilhaEnc pilha ) {
+	int tamanho = 0;
+	while( pilha != NULL ) {
+		pilha = pilha->prox;
+		tamanho++;
+	}
+	return tamanho;
+}
+
+int empilha(TPilhaEnc *pilha, tipo_dado dado){
+	TPilhaEnc novo_no;
+
+	novo_no = (no*) malloc(sizeof(no));
+	if( novo_no == NULL ) return 0;
+
+	novo_no->dado = dado;
+	novo_no->prox = (*pilha);
+	*pilha = novo_no;
+	return 1;
+}
+
+int desempilha(TPilhaEnc* pilha, tipo_dado* dado){
+    if( pilhaVazia(*pilha) ) return 0;
+
+    TPilhaEnc aux;
+    aux = *pilha;
+
+    *dado = aux->dado;
+    *pilha = aux->prox;
+
+    free(aux);
+
+    return 1;
+}
+
+int imprimir(TPilhaEnc pilha) {
+    if( pilhaVazia(pilha) ) return 0;
+
+    printf("Pilha: [ ");
+
+    while( pilha != NULL ) {
+        printf("%d ", pilha->dado);
+        pilha = pilha->prox;
+    }
+
+    printf("]");
+
+    return 1;
+}
+
+int elementoTopo(TPilhaEnc pilha, int *dado){
+	if(pilhaVazia(pilha)) return 0;
+
+	*dado = pilha->dado;
+	return 1;
+}
+
+int desempilhaN(TPilhaEnc *pilha, int n ) {
+  if(elementoTopo(TPilhaEnc pilha, int *dado ) return 1;
+  for(int i = 0; i < n; i++ ){
+    TPilhaEnc aux = *pilha;
+  }
+}
