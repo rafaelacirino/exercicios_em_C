@@ -1,0 +1,116 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+//sNODE contendo um dado e prox que aponta para o próximo nó
+struct sNODE{
+  int dado;
+  struct sNODE *prox;
+};
+
+//ponteiro topo aponta sempre para o último nó
+struct sNODE* topo = NULL;
+
+void push(int dado);
+int pop();
+int tamanho();
+void imprimir();
+void apagar();
+int getTopo(int elemento);
+
+int main(void){
+  return 0;
+}
+
+//push empilha um novo elemento na pilha
+void push(int dado){
+  //aloca um novo nó
+  struct sNODE* novo = (struct sNODE*)malloc(sizeof(struct sNODE));
+  //atribui parâmetro dado ao campo dado
+  novo->dado = dado;
+  //atribui NULL ao campo prox
+  novo->prox = NULL;
+  //verifica se o ponteiro topo para identificar se a pilha tem ou não elementos
+  //caso o topo seja NULL o novo nó é o único elemnto da pilha, então prox deve continuar NULL
+  if(!topo){
+    topo = novo;
+  }
+  //se já houver elemento na pilha faz com que o nó aponte para o topo anterior e depois atualiza o topo para o novo nó
+  else{
+    novo->prox = topo;
+    topo = novo;
+  }
+}
+
+//desempilha o último elemnto da pilha e retorna o último elemento da pilha
+int pop(){
+  //avalia se a pilha está vazia
+  //pilha não vazia, acessa o nó topo e salva o dado a ser retornado
+  if(topo){
+    int dado = topo->dado;
+    //guarda o ponteiro topo em tmp 
+    struct sNODE* tmp = topo;
+    //faz topo avançar um nó
+    topo = topo->prox;
+    free (tmp);
+    return dado;
+  }
+  //pilha vazia
+  else{
+    printf("Não há elementos. Pilha vazia.\n");
+    exit(1);
+  }
+}
+
+int getTopo(int elemento){
+  if(topo){
+    int dado = topo->dado;
+    //guarda o ponteiro topo em tmp 
+    struct sNODE* tmp = topo;
+    //faz topo avançar um nó
+    /*topo = topo->prox;
+    free (tmp);*/
+    return topo;
+  }
+  //pilha vazia
+  else{
+    printf("Não há elementos. Pilha vazia.\n");
+    exit(1);
+  }
+}
+
+//obtem e retorna o tamanho da pilha
+int tamanho(){
+  //aux recebe topo 
+  struct sNODE* aux = topo;
+  int tam = 0;
+
+  //ponteiro aux percorre toda a pilha incrementando uma variável tam e ao final retorna tam 
+  while(aux){
+    tam++;
+    aux = aux->prox;
+  }
+  return tam;
+}
+
+//immprime toda a pilha
+//como tem apenas um ponteiro para o topo, ao imprimir os dados são exibidos de trás para frente 
+void imprimir(){
+  struct sNODE* aux = topo;
+  printf("P[ ");
+  while(aux){
+    printf("%d ", aux->dado);
+  }
+  printf("]\n");
+}
+
+//zera a pilha
+void apagar(){
+  struct sNODE* aux = topo, *ant;
+
+  while(aux){
+    ant = aux;
+    aux = aux->prox;
+    free(ant);
+  }
+  topo = NULL;
+}
